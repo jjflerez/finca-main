@@ -9,12 +9,19 @@ import jakarta.persistence.*;
 public abstract class Inmueble {
 
     @Id
+    @Column(length = 50)
     private String id;
+    @Column(length = 200)
     private String direccion;
+    @Column(length = 50)
     private String numero;
+    @Column(name = "codigo_postal", length = 20)
     private String codigoPostal;
+    @Column(length = 100)
     private String ciudad;
+    @Column(length = 100)
     private String provincia;
+    @Column(name = "referencia_catastral", length = 50)
     private String referenciaCatastral;
     @Column(name = "superficie_m2")
     private double superficieM2;
