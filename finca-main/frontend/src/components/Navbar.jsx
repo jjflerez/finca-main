@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { FiHome, FiGrid, FiLayers, FiBox, FiList, FiChevronRight } from 'react-icons/fi';
+import { FiHome, FiGrid, FiLayers, FiBox, FiList, FiChevronRight, FiUsers, FiFileText, FiDollarSign } from 'react-icons/fi';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -11,6 +11,9 @@ const Navbar = () => {
     { path: '/edificios', label: 'Edificios', icon: <FiGrid /> },
     { path: '/pisos', label: 'Pisos', icon: <FiLayers /> },
     { path: '/locales', label: 'Locales', icon: <FiBox /> },
+    { path: '/inquilinos', label: 'Inquilinos', icon: <FiUsers /> },
+    { path: '/recibos', label: 'Recibos', icon: <FiFileText /> },
+    { path: '/movimientos', label: 'Movimientos', icon: <FiDollarSign /> },
   ];
 
   return (

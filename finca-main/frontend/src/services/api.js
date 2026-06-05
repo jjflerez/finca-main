@@ -79,4 +79,38 @@ export const api = {
     create: (data) => request('/locales', 'POST', data),
     delete: (id) => request(`/locales/${id}`, 'DELETE'),
   },
+  inquilinos: {
+    getAll: () => request('/inquilinos'),
+    getByDni: (dni) => request(`/inquilinos/${dni}`),
+    create: (data) => request('/inquilinos', 'POST', data),
+    update: (dni, data) => request(`/inquilinos/${dni}`, 'PUT', data),
+    delete: (dni) => request(`/inquilinos/${dni}`, 'DELETE'),
+    puedeAlquilar: (dni) => request(`/inquilinos/${dni}/puede-alquilar`),
+  },
+  recibos: {
+    getAll: () => request('/recibos'),
+    getPendientes: () => request('/recibos/pendientes'),
+    getByInmueble: (id) => request(`/recibos/inmueble/${id}`),
+    create: (data) => request('/recibos', 'POST', data),
+    update: (id, data) => request(`/recibos/${id}`, 'PUT', data),
+    marcarCobrado: (id, cobrado) => request(`/recibos/${id}/cobrar`, 'PATCH', { cobrado }),
+    copiarMesAnterior: (inmuebleId) => request(`/recibos/copiar-mes-anterior/${inmuebleId}`, 'POST'),
+    delete: (id) => request(`/recibos/${id}`, 'DELETE'),
+  },
+  alquiler: {
+    alquilar: (data) => request('/alquiler/alquilar', 'POST', data),
+    desalquilar: (inmuebleId, tipoInmueble) => request('/alquiler/desalquilar', 'POST', { inmuebleId, tipoInmueble }),
+  },
+  bancos: {
+    getAll: () => request('/bancos'),
+    create: (data) => request('/bancos', 'POST', data),
+    getCuentas: (id) => request(`/bancos/${id}/cuentas`),
+    crearCuenta: (bancoId, data) => request(`/bancos/${bancoId}/cuentas`, 'POST', data),
+  },
+  movimientos: {
+    getAll: () => request('/movimientos'),
+    getByInmueble: (id) => request(`/movimientos/inmueble/${id}`),
+    create: (data) => request('/movimientos', 'POST', data),
+    getResumenAnual: (anio) => request(`/informes/resumen-anual/${anio}`),
+  },
 };
