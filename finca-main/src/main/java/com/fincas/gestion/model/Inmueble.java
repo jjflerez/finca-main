@@ -15,6 +15,7 @@ public abstract class Inmueble {
     private String ciudad;
     private String provincia;
     private String referenciaCatastral;
+    @Column(name = "superficie_m2")
     private double superficieM2;
     private boolean activo = true;
 
