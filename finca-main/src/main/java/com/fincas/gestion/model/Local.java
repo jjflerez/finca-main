@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@DiscriminatorValue("LOCAL")
 public class Local extends Inmueble {
 
     public enum UsoLocal { COMERCIAL, OFICINA, ALMACEN, HOSTELERIA, OTRO }

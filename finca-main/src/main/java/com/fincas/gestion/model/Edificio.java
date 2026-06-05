@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@DiscriminatorValue("EDIFICIO")
 public class Edificio extends Inmueble {
 
     private String nombreEdificio;

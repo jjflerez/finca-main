@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@DiscriminatorValue("PISO")
 public class Piso extends Inmueble {
 
     private String edificioId;
