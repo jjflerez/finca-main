@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://d0aa2d83786f6b.lhr.life/api';
 
 async function request(endpoint, method = 'GET', body = null) {
   const options = {
