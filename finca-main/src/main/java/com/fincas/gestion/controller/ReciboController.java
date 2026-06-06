@@ -1,7 +1,9 @@
 package com.fincas.gestion.controller;
 
 import com.fincas.gestion.model.Recibo;
+import com.fincas.gestion.model.TipoMovimiento;
 import com.fincas.gestion.service.ReciboService;
+import com.fincas.gestion.service.ReciboService.InicializarConceptoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +42,24 @@ public class ReciboController {
         return reciboService.listarPendientesEnRango(desde, hasta);
     }
 
+    @GetMapping("/cobrados/rango")
+    public List<Recibo> listarCobradosEnRango(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta) {
+        return reciboService.listarCobradosEnRango(desde, hasta);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Recibo> obtenerPorId(@PathVariable Long id) {
         return reciboService.obtenerPorId(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Formato de impresión (sin conceptos a cero)
+    @GetMapping("/{id}/impresion")
+    public ResponseEntity<Map<String, Object>> obtenerParaImpresion(@PathVariable Long id) {
+        return reciboService.obtenerParaImpresion(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -57,6 +74,20 @@ public class ReciboController {
         return reciboService.copiarMesAnterior(inmuebleId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Generación masiva de recibos mensuales
+    @PostMapping("/generar-mensuales")
+    public ResponseEntity<List<Recibo>> generarRecibosMensuales() {
+        List<Recibo> generados = reciboService.generarRecibosMensuales();
+        return ResponseEntity.ok(generados);
+    }
+
+    // Inicializar concepto a una cantidad
+    @PostMapping("/inicializar-concepto")
+    public ResponseEntity<List<Recibo>> inicializarConcepto(@RequestBody InicializarConceptoRequest request) {
+        List<Recibo> actualizados = reciboService.inicializarConcepto(request);
+        return ResponseEntity.ok(actualizados);
     }
 
     @PutMapping("/{id}")

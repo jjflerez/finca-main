@@ -28,9 +28,23 @@ public class PisoController {
         return pisoService.listarLibres();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PisoResponseDTO> obtenerPorId(@PathVariable String id) {
+        return pisoService.obtenerPorId(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public PisoResponseDTO crear(@RequestBody Piso piso) {
         return pisoService.crear(piso);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PisoResponseDTO> actualizar(@PathVariable String id, @RequestBody Piso datos) {
+        return pisoService.actualizar(id, datos)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

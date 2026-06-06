@@ -40,7 +40,8 @@ public class InmuebleService {
             dto.setEdificioId(l.getEdificioId());
             dto.setEstado(l.isAlquilado() ? "ALQUILADO" : "LIBRE");
         } else if (inmueble instanceof Edificio) {
-            dto.setEstado("EDIFICIO PRINCIPAL");
+            Edificio e = (Edificio) inmueble;
+            dto.setEstado(e.isAlquilado() ? "ALQUILADO" : "LIBRE");
             dto.setEdificioId(null);
         }
 

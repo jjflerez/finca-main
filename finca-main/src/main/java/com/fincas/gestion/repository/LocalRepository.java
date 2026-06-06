@@ -10,4 +10,6 @@ import java.util.List;
 public interface LocalRepository extends JpaRepository<Local, String> {
     List<Local> findByActivoTrue();
     List<Local> findByActivoTrueAndInquilinoIdIsNull();
+    List<Local> findByEdificioIdAndActivoTrue(String edificioId);
+    List<Local> findByActivoTrueAndInquilinoIdIsNotNull();
 }

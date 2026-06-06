@@ -28,9 +28,23 @@ public class LocalController {
         return localService.listarLibres();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<LocalResponseDTO> obtenerPorId(@PathVariable String id) {
+        return localService.obtenerPorId(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public LocalResponseDTO crear(@RequestBody Local local) {
         return localService.crear(local);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LocalResponseDTO> actualizar(@PathVariable String id, @RequestBody Local datos) {
+        return localService.actualizar(id, datos)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

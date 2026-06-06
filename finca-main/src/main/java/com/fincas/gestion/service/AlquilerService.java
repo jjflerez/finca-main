@@ -5,6 +5,7 @@ import com.fincas.gestion.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,9 @@ public class AlquilerService {
 
     @Autowired
     private LocalRepository localRepository;
+
+    @Autowired
+    private EdificioRepository edificioRepository;
 
     public record AlquilerRequest(String inmuebleId, String inquilinoDni, String tipoInmueble,
                                    java.time.LocalDate fechaInicio, java.time.LocalDate fechaFin,
@@ -63,7 +67,34 @@ public class AlquilerService {
             }).orElse(new AlquilerResult(false, "Local no encontrado."));
         }
 
-        return new AlquilerResult(false, "Tipo de inmueble no válido. Use PISO o LOCAL.");
+        // Alquilar edificio completo
+        if ("EDIFICIO".equalsIgnoreCase(req.tipoInmueble())) {
+            return edificioRepository.findById(req.inmuebleId()).map(edificio -> {
+                if (edificio.isAlquilado()) {
+                    return new AlquilerResult(false, "El edificio ya está alquilado.");
+                }
+                // Verificar que ningún piso o local del edificio esté alquilado individualmente
+                List<Piso> pisosEdificio = pisoRepository.findByEdificioIdAndActivoTrue(req.inmuebleId());
+                boolean hayPisoAlquilado = pisosEdificio.stream().anyMatch(Piso::isAlquilado);
+                if (hayPisoAlquilado) {
+                    return new AlquilerResult(false, "No se puede alquilar el edificio completo: hay pisos ya alquilados individualmente.");
+                }
+                List<Local> localesEdificio = localRepository.findByEdificioIdAndActivoTrue(req.inmuebleId());
+                boolean hayLocalAlquilado = localesEdificio.stream().anyMatch(Local::isAlquilado);
+                if (hayLocalAlquilado) {
+                    return new AlquilerResult(false, "No se puede alquilar el edificio completo: hay locales ya alquilados individualmente.");
+                }
+
+                edificio.setInquilinoId(req.inquilinoDni());
+                edificio.setFechaInicioContrato(req.fechaInicio());
+                edificio.setFechaFinContrato(req.fechaFin());
+                edificio.setRentaMensual(req.rentaMensual());
+                edificioRepository.save(edificio);
+                return new AlquilerResult(true, "Edificio completo alquilado correctamente.");
+            }).orElse(new AlquilerResult(false, "Edificio no encontrado."));
+        }
+
+        return new AlquilerResult(false, "Tipo de inmueble no válido. Use PISO, LOCAL o EDIFICIO.");
     }
 
     public AlquilerResult desalquilar(String inmuebleId, String tipoInmueble) {
@@ -91,6 +122,20 @@ public class AlquilerService {
                 localRepository.save(local);
                 return new AlquilerResult(true, "Local desalquilado correctamente.");
             }).orElse(new AlquilerResult(false, "Local no encontrado."));
+        }
+
+        if ("EDIFICIO".equalsIgnoreCase(tipoInmueble)) {
+            return edificioRepository.findById(inmuebleId).map(edificio -> {
+                if (!edificio.isAlquilado()) {
+                    return new AlquilerResult(false, "El edificio no está alquilado.");
+                }
+                edificio.setInquilinoId(null);
+                edificio.setFechaInicioContrato(null);
+                edificio.setFechaFinContrato(null);
+                edificio.setRentaMensual(0);
+                edificioRepository.save(edificio);
+                return new AlquilerResult(true, "Edificio desalquilado correctamente.");
+            }).orElse(new AlquilerResult(false, "Edificio no encontrado."));
         }
 
         return new AlquilerResult(false, "Tipo de inmueble no válido.");

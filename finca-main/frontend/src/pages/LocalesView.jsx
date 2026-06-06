@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FiFilter, FiPlus, FiTrash2, FiRefreshCw } from 'react-icons/fi';
+import { FiFilter, FiPlus, FiTrash2, FiRefreshCw, FiEdit2 } from 'react-icons/fi';
 import { api } from '../services/api';
 
 const initialFormState = {
@@ -32,6 +32,7 @@ const LocalesView = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [filterFree, setFilterFree] = useState(false);
   const [formData, setFormData] = useState(initialFormState);
 
@@ -64,7 +65,28 @@ const LocalesView = () => {
     return () => window.clearTimeout(timeoutId);
   }, [fetchData]);
 
-  const resetForm = () => setFormData(initialFormState);
+  const resetForm = () => { setFormData(initialFormState); setEditingId(null); };
+
+  const handleEdit = (local) => {
+    setEditingId(local.id);
+    setFormData({
+      id: local.id,
+      direccion: local.direccion || '',
+      numero: local.numero || '',
+      codigoPostal: local.codigoPostal || '',
+      ciudad: local.ciudad || '',
+      provincia: local.provincia || '',
+      referenciaCatastral: local.referenciaCatastral || '',
+      superficieM2: local.superficieM2 || '',
+      edificioId: local.edificioId || '',
+      numeroLocal: local.numeroLocal || '',
+      usoLocal: local.usoLocal || 'COMERCIAL',
+      rentaMensual: local.rentaMensual || '',
+      tieneIVA: local.tieneIVA || false,
+      gestionadoPorEmpresa: local.gestionadoPorEmpresa || false,
+    });
+    setShowForm(true);
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Eliminar local de forma logica?')) {
@@ -104,7 +126,11 @@ const LocalesView = () => {
 
     try {
       setLoading(true);
-      await api.locales.create(payload);
+      if (editingId) {
+        await api.locales.update(editingId, payload);
+      } else {
+        await api.locales.create(payload);
+      }
       setShowForm(false);
       resetForm();
       await fetchData();
@@ -154,7 +180,7 @@ const LocalesView = () => {
             <FiRefreshCw />
             Refrescar
           </button>
-          <button type="button" className="btn-primary" onClick={() => setShowForm((previous) => !previous)}>
+          <button type="button" className="btn-primary" onClick={() => { if (showForm) { resetForm(); setShowForm(false); } else { setShowForm(true); } }}>
             <FiPlus />
             {showForm ? 'Cerrar formulario' : 'Nuevo local'}
           </button>
@@ -166,7 +192,7 @@ const LocalesView = () => {
       {showForm ? (
         <section className="card panel">
           <div>
-            <h2 className="panel-title">Registrar local</h2>
+            <h2 className="panel-title">{editingId ? 'Editar local' : 'Registrar local'}</h2>
             <p className="panel-subtitle">Completa la informacion base y asocia el local con un edificio.</p>
           </div>
 
@@ -184,7 +210,7 @@ const LocalesView = () => {
             </div>
             <div className="form-group">
               <label className="form-label">ID unico</label>
-              <input required name="id" value={formData.id} onChange={handleInputChange} className="form-input" placeholder="Ej. LOC-001" />
+              <input required name="id" value={formData.id} onChange={handleInputChange} className="form-input" placeholder="Ej. LOC-001" disabled={!!editingId} />
             </div>
             <div className="form-group">
               <label className="form-label">Direccion</label>
@@ -262,7 +288,7 @@ const LocalesView = () => {
                   Limpiar
                 </button>
                 <button type="submit" className="btn-primary" disabled={saving}>
-                  {saving ? 'Guardando...' : 'Guardar local'}
+                  {saving ? 'Guardando...' : editingId ? 'Actualizar local' : 'Guardar local'}
                 </button>
               </div>
             </div>
@@ -322,14 +348,10 @@ const LocalesView = () => {
                     <td>{Number(local.rentaMensual).toFixed(2)} EUR</td>
                     <td><LocalBadge estado={local.estado} /></td>
                     <td>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(local.id)}
-                        className="action-btn text-danger"
-                        aria-label={`Eliminar local ${local.id}`}
-                      >
-                        <FiTrash2 />
-                      </button>
+                      <div className="action-group">
+                        <button type="button" onClick={() => handleEdit(local)} className="action-btn text-warning" aria-label="Editar" title="Editar"><FiEdit2 /></button>
+                        <button type="button" onClick={() => handleDelete(local.id)} className="action-btn text-danger" aria-label={`Eliminar local ${local.id}`}><FiTrash2 /></button>
+                      </div>
                     </td>
                   </tr>
                 ))}

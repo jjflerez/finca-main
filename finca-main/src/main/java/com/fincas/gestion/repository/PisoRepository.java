@@ -10,4 +10,6 @@ import java.util.List;
 public interface PisoRepository extends JpaRepository<Piso, String> {
     List<Piso> findByActivoTrue();
     List<Piso> findByActivoTrueAndInquilinoIdIsNull();
+    List<Piso> findByEdificioIdAndActivoTrue(String edificioId);
+    List<Piso> findByActivoTrueAndInquilinoIdIsNotNull();
 }

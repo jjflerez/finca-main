@@ -3,6 +3,7 @@ package com.fincas.gestion.model;
 import jakarta.persistence.*;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,13 @@ public class Edificio extends Inmueble {
 
     private String nombreEdificio;
     private int totalPlantas;
+
+    // Campos para alquiler del edificio completo
+    private String inquilinoId;
+    private LocalDate fechaInicioContrato;
+    private LocalDate fechaFinContrato;
+    private double rentaMensual;
+
     @Transient
     private List<Piso> pisos;
     
@@ -36,6 +44,10 @@ public class Edificio extends Inmueble {
     @Override
     public String getTipoInmueble() {
         return "EDIFICIO";
+    }
+
+    public boolean isAlquilado() {
+        return inquilinoId != null && !inquilinoId.isEmpty();
     }
 
     public void agregarPiso(Piso piso) {
@@ -90,6 +102,38 @@ public class Edificio extends Inmueble {
 
     public void setTotalPlantas(int totalPlantas) {
         this.totalPlantas = totalPlantas;
+    }
+
+    public String getInquilinoId() {
+        return inquilinoId;
+    }
+
+    public void setInquilinoId(String inquilinoId) {
+        this.inquilinoId = inquilinoId;
+    }
+
+    public LocalDate getFechaInicioContrato() {
+        return fechaInicioContrato;
+    }
+
+    public void setFechaInicioContrato(LocalDate fechaInicioContrato) {
+        this.fechaInicioContrato = fechaInicioContrato;
+    }
+
+    public LocalDate getFechaFinContrato() {
+        return fechaFinContrato;
+    }
+
+    public void setFechaFinContrato(LocalDate fechaFinContrato) {
+        this.fechaFinContrato = fechaFinContrato;
+    }
+
+    public double getRentaMensual() {
+        return rentaMensual;
+    }
+
+    public void setRentaMensual(double rentaMensual) {
+        this.rentaMensual = rentaMensual;
     }
 
     public List<Piso> getPisos() {

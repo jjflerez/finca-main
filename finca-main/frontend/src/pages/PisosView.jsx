@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FiFilter, FiPlus, FiTrash2, FiRefreshCw } from 'react-icons/fi';
+import { FiFilter, FiPlus, FiTrash2, FiRefreshCw, FiEdit2 } from 'react-icons/fi';
 import { api } from '../services/api';
 
 const initialFormState = {
@@ -33,6 +33,7 @@ const PisosView = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [filterFree, setFilterFree] = useState(false);
   const [formData, setFormData] = useState(initialFormState);
 
@@ -65,7 +66,29 @@ const PisosView = () => {
     return () => window.clearTimeout(timeoutId);
   }, [fetchData]);
 
-  const resetForm = () => setFormData(initialFormState);
+  const resetForm = () => { setFormData(initialFormState); setEditingId(null); };
+
+  const handleEdit = (piso) => {
+    setEditingId(piso.id);
+    setFormData({
+      id: piso.id,
+      direccion: piso.direccion || '',
+      numero: piso.numero || '',
+      codigoPostal: piso.codigoPostal || '',
+      ciudad: piso.ciudad || '',
+      provincia: piso.provincia || '',
+      referenciaCatastral: piso.referenciaCatastral || '',
+      superficieM2: piso.superficieM2 || '',
+      edificioId: piso.edificioId || '',
+      planta: piso.planta || '',
+      puerta: piso.puerta || '',
+      habitaciones: piso.habitaciones || '',
+      banos: piso.banos || '',
+      gestionadoPorEmpresa: piso.gestionadoPorEmpresa || false,
+      rentaMensual: piso.rentaMensual || '',
+    });
+    setShowForm(true);
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Eliminar piso de forma logica?')) {
@@ -107,7 +130,11 @@ const PisosView = () => {
 
     try {
       setLoading(true);
-      await api.pisos.create(payload);
+      if (editingId) {
+        await api.pisos.update(editingId, payload);
+      } else {
+        await api.pisos.create(payload);
+      }
       setShowForm(false);
       resetForm();
       await fetchData();
@@ -157,7 +184,7 @@ const PisosView = () => {
             <FiRefreshCw />
             Refrescar
           </button>
-          <button type="button" className="btn-primary" onClick={() => setShowForm((previous) => !previous)}>
+          <button type="button" className="btn-primary" onClick={() => { if (showForm) { resetForm(); setShowForm(false); } else { setShowForm(true); } }}>
             <FiPlus />
             {showForm ? 'Cerrar formulario' : 'Nuevo piso'}
           </button>
@@ -169,7 +196,7 @@ const PisosView = () => {
       {showForm ? (
         <section className="card panel">
           <div>
-            <h2 className="panel-title">Registrar piso</h2>
+            <h2 className="panel-title">{editingId ? 'Editar piso' : 'Registrar piso'}</h2>
             <p className="panel-subtitle">Usa el selector de edificios para asociarlo correctamente.</p>
           </div>
 
@@ -187,7 +214,7 @@ const PisosView = () => {
             </div>
             <div className="form-group">
               <label className="form-label">ID unico</label>
-              <input required name="id" value={formData.id} onChange={handleInputChange} className="form-input" placeholder="Ej. PIS-001" />
+              <input required name="id" value={formData.id} onChange={handleInputChange} className="form-input" placeholder="Ej. PIS-001" disabled={!!editingId} />
             </div>
             <div className="form-group">
               <label className="form-label">Direccion</label>
@@ -255,7 +282,7 @@ const PisosView = () => {
                   Limpiar
                 </button>
                 <button type="submit" className="btn-primary" disabled={saving}>
-                  {saving ? 'Guardando...' : 'Guardar piso'}
+                  {saving ? 'Guardando...' : editingId ? 'Actualizar piso' : 'Guardar piso'}
                 </button>
               </div>
             </div>
@@ -314,14 +341,10 @@ const PisosView = () => {
                     <td>{Number(piso.rentaMensual).toFixed(2)} EUR</td>
                     <td><PisoBadge estado={piso.estado} /></td>
                     <td>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(piso.id)}
-                        className="action-btn text-danger"
-                        aria-label={`Eliminar piso ${piso.id}`}
-                      >
-                        <FiTrash2 />
-                      </button>
+                      <div className="action-group">
+                        <button type="button" onClick={() => handleEdit(piso)} className="action-btn text-warning" aria-label="Editar" title="Editar"><FiEdit2 /></button>
+                        <button type="button" onClick={() => handleDelete(piso.id)} className="action-btn text-danger" aria-label={`Eliminar piso ${piso.id}`}><FiTrash2 /></button>
+                      </div>
                     </td>
                   </tr>
                 ))}

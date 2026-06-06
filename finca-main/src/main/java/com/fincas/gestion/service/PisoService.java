@@ -28,10 +28,34 @@ public class PisoService {
                 .collect(Collectors.toList());
     }
 
+    public Optional<PisoResponseDTO> obtenerPorId(String id) {
+        return pisoRepository.findById(id).filter(Piso::isActivo).map(PisoResponseDTO::new);
+    }
+
     public PisoResponseDTO crear(Piso piso) {
         piso.setActivo(true);
         Piso guardado = pisoRepository.save(piso);
         return new PisoResponseDTO(guardado);
+    }
+
+    public Optional<PisoResponseDTO> actualizar(String id, Piso datos) {
+        return pisoRepository.findById(id).filter(Piso::isActivo).map(piso -> {
+            piso.setDireccion(datos.getDireccion());
+            piso.setNumero(datos.getNumero());
+            piso.setCodigoPostal(datos.getCodigoPostal());
+            piso.setCiudad(datos.getCiudad());
+            piso.setProvincia(datos.getProvincia());
+            piso.setReferenciaCatastral(datos.getReferenciaCatastral());
+            piso.setSuperficieM2(datos.getSuperficieM2());
+            piso.setEdificioId(datos.getEdificioId());
+            piso.setPlanta(datos.getPlanta());
+            piso.setPuerta(datos.getPuerta());
+            piso.setHabitaciones(datos.getHabitaciones());
+            piso.setBanos(datos.getBanos());
+            piso.setGestionadoPorEmpresa(datos.isGestionadoPorEmpresa());
+            piso.setRentaMensual(datos.getRentaMensual());
+            return new PisoResponseDTO(pisoRepository.save(piso));
+        });
     }
 
     public boolean eliminarLogico(String id) {

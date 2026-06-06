@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface EdificioRepository extends JpaRepository<Edificio, String> {
     List<Edificio> findByActivoTrue();
+    List<Edificio> findByActivoTrueAndInquilinoIdIsNull();
 }
