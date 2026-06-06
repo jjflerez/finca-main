@@ -81,6 +81,40 @@ public class DataLoader {
                 l2.setInquilinoId("33333333C"); l2.setFechaInicioContrato(LocalDate.now().minusMonths(6)); l2.setFechaFinContrato(LocalDate.now().plusYears(4));
                 localRepository.save(l2);
 
+                Inquilino i4 = new Inquilino();
+                i4.setDni("44444444D"); i4.setNombre("Laura"); i4.setApellidos("Martinez");
+                i4.setTelefono("600998877"); i4.setEmail("laura@email.com");
+                i4.setTieneNomina(true); i4.setActivo(true); i4.setFechaAlta(LocalDate.now());
+                inquilinoRepository.save(i4);
+
+                Inquilino i5 = new Inquilino();
+                i5.setDni("55555555E"); i5.setNombre("Pedro"); i5.setApellidos("Sanchez");
+                i5.setTelefono("600554433"); i5.setEmail("pedro@email.com");
+                i5.setTieneContratoTrabajo(true); i5.setActivo(true); i5.setFechaAlta(LocalDate.now());
+                inquilinoRepository.save(i5);
+
+                Edificio ed3 = new Edificio("EDF-03", "Plaza España", "1", "28008", "Madrid", "Madrid", "REF-EDF-03", 3000.0, "Edificio Plaza", 6);
+                ed3.setActivo(true);
+                edificioRepository.save(ed3);
+
+                Piso p4 = new Piso("PIS-04", "Plaza España", "1", "28008", "Madrid", "Madrid", "REF-PIS-04", 120.0, "EDF-03", 3, "A", 4, 2, true, 1200.0);
+                p4.setActivo(true);
+                p4.setInquilinoId("44444444D"); p4.setFechaInicioContrato(LocalDate.now().minusMonths(2)); p4.setFechaFinContrato(LocalDate.now().plusYears(1));
+                pisoRepository.save(p4);
+
+                Piso p5 = new Piso("PIS-05", "Plaza España", "1", "28008", "Madrid", "Madrid", "REF-PIS-05", 85.0, "EDF-03", 3, "B", 2, 1, false, 900.0);
+                p5.setActivo(true);
+                pisoRepository.save(p5);
+
+                Local l3 = new Local("LOC-03", "Plaza España", "1", "28008", "Madrid", "Madrid", "REF-LOC-03", 200.0, "EDF-03", 1, Local.UsoLocal.HOSTELERIA, true, 2500.0, true);
+                l3.setActivo(true);
+                l3.setInquilinoId("55555555E"); l3.setFechaInicioContrato(LocalDate.now().minusMonths(1)); l3.setFechaFinContrato(LocalDate.now().plusYears(5));
+                localRepository.save(l3);
+
+                Local l4 = new Local("LOC-04", "Calle Mayor", "10", "28001", "Madrid", "Madrid", "REF-LOC-04", 80.0, "EDF-01", 3, Local.UsoLocal.ALMACEN, false, 800.0, true);
+                l4.setActivo(true);
+                localRepository.save(l4);
+
                 System.out.println("Datos de prueba (Inquilinos, Edificios, Pisos y Locales) generados exitosamente.");
             }
         };

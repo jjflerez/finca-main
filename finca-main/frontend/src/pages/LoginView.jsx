@@ -56,7 +56,6 @@ const LoginView = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 className="form-input"
                 style={{ paddingLeft: '2.5rem' }}
-                placeholder="ej: admin"
                 required
               />
             </div>
@@ -83,11 +82,7 @@ const LoginView = () => {
           </button>
         </form>
 
-        <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
-          Usuarios de prueba:<br/>
-          <strong>admin</strong> / admin123<br/>
-          <strong>secretario</strong> / fincas2026
-        </div>
+
       </div>
     </div>
   );
