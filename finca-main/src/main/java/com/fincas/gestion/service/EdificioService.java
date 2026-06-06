@@ -53,6 +53,8 @@ public class EdificioService {
             edificio.setReferenciaCatastral(datos.getReferenciaCatastral());
             edificio.setSuperficieM2(datos.getSuperficieM2());
             edificio.setTotalPlantas(datos.getTotalPlantas());
+            edificio.setInquilinoId(datos.getInquilinoId() != null && !datos.getInquilinoId().isBlank() ? datos.getInquilinoId() : null);
+            edificio.setRentaMensual(datos.getRentaMensual());
             return new EdificioResponseDTO(edificioRepository.save(edificio));
         });
     }

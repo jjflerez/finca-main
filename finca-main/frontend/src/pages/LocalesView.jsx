@@ -17,6 +17,7 @@ const initialFormState = {
   rentaMensual: '',
   tieneIVA: true,
   gestionadoPorEmpresa: false,
+  inquilinoId: '',
 };
 
 const LocalBadge = ({ estado }) => (
@@ -84,6 +85,7 @@ const LocalesView = () => {
       rentaMensual: local.rentaMensual || '',
       tieneIVA: local.tieneIVA || false,
       gestionadoPorEmpresa: local.gestionadoPorEmpresa || false,
+      inquilinoId: local.inquilinoId || '',
     });
     setShowForm(true);
   };
@@ -257,6 +259,10 @@ const LocalesView = () => {
             <div className="form-group">
               <label className="form-label">Renta mensual</label>
               <input type="number" step="0.01" min="0" required name="rentaMensual" value={formData.rentaMensual} onChange={handleInputChange} className="form-input" />
+            </div>
+            <div className="form-group field-span-2">
+              <label className="form-label">DNI del inquilino (dejar vacío para estado LIBRE)</label>
+              <input name="inquilinoId" value={formData.inquilinoId} onChange={handleInputChange} className="form-input" placeholder="Ej: 11111111A" />
             </div>
             <div className="form-group field-span-2">
               <label className="form-label">

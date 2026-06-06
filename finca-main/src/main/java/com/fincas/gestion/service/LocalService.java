@@ -55,6 +55,7 @@ public class LocalService {
             local.setGestionadoPorEmpresa(datos.isGestionadoPorEmpresa());
             local.setRentaMensual(datos.getRentaMensual());
             local.setTieneIVA(datos.isTieneIVA());
+            local.setInquilinoId(datos.getInquilinoId() != null && !datos.getInquilinoId().isBlank() ? datos.getInquilinoId() : null);
             return new LocalResponseDTO(localRepository.save(local));
         });
     }

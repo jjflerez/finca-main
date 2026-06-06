@@ -54,6 +54,7 @@ public class PisoService {
             piso.setBanos(datos.getBanos());
             piso.setGestionadoPorEmpresa(datos.isGestionadoPorEmpresa());
             piso.setRentaMensual(datos.getRentaMensual());
+            piso.setInquilinoId(datos.getInquilinoId() != null && !datos.getInquilinoId().isBlank() ? datos.getInquilinoId() : null);
             return new PisoResponseDTO(pisoRepository.save(piso));
         });
     }

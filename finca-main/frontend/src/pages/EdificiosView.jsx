@@ -11,9 +11,10 @@ const initialFormState = {
   ciudad: '',
   provincia: '',
   referenciaCatastral: '',
-  superficieM2: '',
   nombreEdificio: '',
   totalPlantas: '',
+  inquilinoId: '',
+  rentaMensual: '',
 };
 
 const EdificiosView = () => {
@@ -71,10 +72,11 @@ const EdificiosView = () => {
       codigoPostal: edificio.codigoPostal || '',
       ciudad: edificio.ciudad || '',
       provincia: edificio.provincia || '',
-      referenciaCatastral: edificio.referenciaCatastral || '',
       superficieM2: edificio.superficieM2 || '',
       nombreEdificio: edificio.nombreEdificio || '',
       totalPlantas: edificio.totalPlantas || '',
+      inquilinoId: edificio.inquilinoId || '',
+      rentaMensual: edificio.rentaMensual || '',
     });
     setShowForm(true);
   };
@@ -203,6 +205,14 @@ const EdificiosView = () => {
             <div className="form-group">
               <label className="form-label">Total plantas</label>
               <input type="number" min="0" required name="totalPlantas" value={formData.totalPlantas} onChange={handleInputChange} className="form-input" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Renta mensual (opcional)</label>
+              <input type="number" step="0.01" min="0" name="rentaMensual" value={formData.rentaMensual} onChange={handleInputChange} className="form-input" />
+            </div>
+            <div className="form-group field-span-2">
+              <label className="form-label">DNI del inquilino (Dejar en blanco para estado LIBRE)</label>
+              <input name="inquilinoId" value={formData.inquilinoId} onChange={handleInputChange} className="form-input" placeholder="Ej: 11111111A" />
             </div>
             <div className="form-group field-span-2">
               <div className="form-actions">

@@ -18,6 +18,7 @@ const initialFormState = {
   banos: '',
   gestionadoPorEmpresa: false,
   rentaMensual: '',
+  inquilinoId: '',
 };
 
 const PisoBadge = ({ estado }) => (
@@ -86,6 +87,7 @@ const PisosView = () => {
       banos: piso.banos || '',
       gestionadoPorEmpresa: piso.gestionadoPorEmpresa || false,
       rentaMensual: piso.rentaMensual || '',
+      inquilinoId: piso.inquilinoId || '',
     });
     setShowForm(true);
   };
@@ -263,6 +265,10 @@ const PisosView = () => {
             <div className="form-group">
               <label className="form-label">Renta mensual</label>
               <input type="number" step="0.01" min="0" required name="rentaMensual" value={formData.rentaMensual} onChange={handleInputChange} className="form-input" />
+            </div>
+            <div className="form-group field-span-2">
+              <label className="form-label">DNI del inquilino (Dejar en blanco para estado LIBRE)</label>
+              <input name="inquilinoId" value={formData.inquilinoId} onChange={handleInputChange} className="form-input" placeholder="Ej: 11111111A" />
             </div>
             <div className="form-group field-span-2">
               <label className="form-label">
